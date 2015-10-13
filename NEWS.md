@@ -6,3 +6,6 @@ Check out [DiffusionRgqd](https://github.com/eta21/DiffusionRgqd) for the packag
 
 # v0.1.0
 Initial verision of __DiffusionRgqd__ uploaded to CRAN and GitHub.
+
+# v0.1.1
+Minor examle update.

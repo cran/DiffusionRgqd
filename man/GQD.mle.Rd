@@ -110,7 +110,7 @@ Here sqrt(t)*cos(3*pi*t) constitutes the product of two terms that cannot be wri
   data(SDEsim1)
   attach(SDEsim1)
   par(mfrow=c(1,1))
-  expr1=expression(dX[t]==2*X[t]*(5+3*sin(0.5*pi*t)-X[t])*dt+0.5*X[t]*dW[t])
+  expr1=expression(dX[t]==2*(5+3*sin(0.5*pi*t)-X[t])*dt+0.5*sqrt(X[t])*dW[t])
   plot(Xt~time,type='l',col='blue',xlab='Time (t)',ylab=expression(X[t]),main=expr1)
 
  #------------------------------------------------------------------------------
@@ -129,9 +129,9 @@ Here sqrt(t)*cos(3*pi*t) constitutes the product of two terms that cannot be wri
 
   GQD.remove()
 
-  G1 <- function(t){theta[1]*(theta[2]+theta[3]*sin(0.25*pi*t))}
-  G2 <- function(t){-theta[1]}
-  Q2 <- function(t){theta[4]*theta[4]}
+  G0 <- function(t){theta[1]*(theta[2]+theta[3]*sin(0.25*pi*t))}
+  G1 <- function(t){-theta[1]}
+  Q1 <- function(t){theta[4]*theta[4]}
 
   theta.start  <- c(1,1,1,1)                      # Starting values for the chain
   mesh.points  <- 10                              # Number of mesh points
