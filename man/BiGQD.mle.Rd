@@ -5,11 +5,43 @@
 Calculate Maximum Likelihood Estimates for a 2D GQD Model.
 }
 \description{
-\code{BiGQD.mle()} uses parametrised coefficients (provided by the user as R-functions) to construct a C++ program in real time that allows the user to perform maximum likelihood inference on the resulting diffusion model. The user may specify any model within the GQD framework by defining parametrised functions giving the form of the coefficients of the model. See the package manual for a description of the process.
+\code{BiGQD.mle()} uses parametrised coefficients (provided by the user as R-functions) to construct a C++ program in real time that allows the user to perform maximum likelihood inference on the resulting diffusion model.
+\if{html}{
+\code{BiGQD.density} generates approximate transitional densities for a class of bivariate diffusion processes with SDE:
+
+\figure{BivEqn1.png}
+
+where
+
+\figure{BivEqn2.png}
+
+and
+
+\figure{BivEqn3.png}
+
+
+
+}
+\if{latex}{
+\code{BiGQD.density()} approximates the transitional density of jump diffusions of the form:
+\deqn{d\mathbf{X}_t = \boldsymbol\mu(\mathbf{X}_t,t)dt +\boldsymbol\sigma(\mathbf{X}_t,t)d\mathbf{W}_t\\}
+where
+\deqn{\mu^{(1)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}a_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\mu^{(2)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}b_{ij}(t)X_t^iY_t^j,\\}
+and
+\deqn{\boldsymbol\sigma(X_t,Y_t,t)\boldsymbol\sigma^{\prime}(X_t,Y_t,t) = (\gamma^{(i,j)}(\mathbf{X}_t,t))_{i,j=1,2}\\}
+such that
+\deqn{\gamma^{(1,1)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}c_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\gamma^{(1,2)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}d_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\gamma^{(2,1)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}e_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\gamma^{(2,2)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}f_{ij}(t)X_t^iY_t^j.\\}
+
+ }
 }
 \usage{
 BiGQD.mle(X, time, mesh=10, theta, control=NULL, method='Nelder-Mead', RK.order=4,
-          exclude=NULL, Tag=NA, Dtype='Saddlepoint', rtf= runif(2,-1,1), wrt=FALSE)
+          exclude=NULL, Tag=NA, Dtype='Saddlepoint', rtf= runif(2,-1,1), wrt=FALSE,
+          print.output=TRUE)
 }
 
 \arguments{
@@ -30,6 +62,7 @@ BiGQD.mle(X, time, mesh=10, theta, control=NULL, method='Nelder-Mead', RK.order=
 \item{Dtype}{The density approximant to use. Valid types are \code{"Saddlepoint"} (default), \code{"Edgeworth"} or \code{"Normal"}.}
 \item{rtf}{Starting vector for internal use.}
 \item{wrt}{If \code{TRUE} a .cpp file will be written to the current directory. For bug report diagnostics.}
+\item{print.output}{If \code{TRUE} information about the model and algorithm is printed to the console. }
 }
 
 \value{
@@ -41,7 +74,7 @@ BiGQD.mle(X, time, mesh=10, theta, control=NULL, method='Nelder-Mead', RK.order=
   \item{model.info$p}{The dimension of \code{theta}.}
 }
 \references{
-Updates available on GitHub at \url{https://github.com/eta21}. Visit \url{http://etiennead.wix.com/diffusionr} for more details on the DiffusionRgqd package.
+Updates available on GitHub at \url{https://github.com/eta21}.
 
 Daniels, H.E. 1954 Saddlepoint approximations in statistics. \emph{Ann. Math. Stat.}, \bold{25}:631--650.
 
@@ -112,7 +145,7 @@ Here sqrt(t)*cos(3*pi*t) constitutes the product of two terms that cannot be wri
        axes=FALSE)
   lines(Yt~time,col='red')
   expr1=expression(dX[t]==2(Y[t]-X[t])*dt+0.3*sqrt(X[t]*Y[t])*dW[t])
-  expr2=expression(dX[t]==(5-Y[t])*dt+0.5*sqrt(Y[t])*dB[t])
+  expr2=expression(dY[t]==(5-Y[t])*dt+0.5*sqrt(Y[t])*dB[t])
   text(50,9,expr1)
   text(50,8.5,expr2)
   axis(1,seq(0,100,5))
@@ -169,6 +202,6 @@ Here sqrt(t)*cos(3*pi*t) constitutes the product of two terms that cannot be wri
 #===============================================================================
 }
 }
-\keyword{Syntax}
+\keyword{syntax}
 \keyword{C++}
-\keyword{Maximum likelihood}
+\keyword{maximum likelihood}

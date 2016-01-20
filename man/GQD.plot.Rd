@@ -30,7 +30,7 @@ Number of parameter draws to discard for \code{.mcmc} objects.
 Etienne A.D. Pienaar: \email{etiannead@gmail.com}
 }
 \references{
-Updates available on GitHub at \url{https://github.com/eta21}. Visit \url{http://etiennead.wix.com/diffusionr} for more details on the DiffusionRgqd package.
+Updates available on GitHub at \url{https://github.com/eta21}. 
 }
 
 
@@ -61,5 +61,5 @@ Updates available on GitHub at \url{https://github.com/eta21}. Visit \url{http:/
   GQD.plot(M)
   }
 }
-\keyword{Plot}
+\keyword{plot}
 

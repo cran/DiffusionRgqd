@@ -5,14 +5,37 @@
 MCMC Inference on Generalized Quadratic Diffusion Models (GQDs).
 }
 \description{
-\code{GQD.mcmc()} uses parametrised coefficients (provided by the user as R-functions) to construct a C++ program in real time that allows the user to perform Bayesian inference on the resulting diffusion model. Given a set of starting parameters and other input parameters, a MCMC chain is returned for further analysis.
-The structure of the model is predefined and coefficients may be provided for models nested within the generalized quadratic diffusion framework. That is, the saturated GQD model is given by: \strong{\deqn{dX_t = (G_0(t)+G_1(t)X_t+G_2(t)X_t^2)dt+\sqrt{Q_0(t)+Q_1(t)X_t+Q_2(t)X_t^2}dW_t}} where dW_t is Standard Brownian Motion.
+\code{GQD.mcmc()} uses parametrised coefficients (provided by the user as R-functions) to construct a C++ program in real time that allows the user to perform Bayesian inference on the resulting jump diffusion model. Given a set of starting parameters, a MCMC chain is returned for further analysis.
+
+\if{html}{
+ \code{GQD.mcmc()} performs inference using the Metropolis-Hastings algorithm for jump diffusions of the form:
+
+ \figure{ScalarEqn1.png}
+
+ where
+
+ \figure{ScalarEqn2.png}
+
+ and
+
+  \figure{ScalarEqn3.png}
+
+ }
+\if{latex}{
+\code{GQD.mcmc()} performs inference using the Metropolis-Hastings algorithm for diffusions of the form:
+\deqn{dX_t = \mu(X,t)dt +\sigma(X_t,t)dW_t\\}
+where
+\deqn{\mu(X,t) = G_0(t,\theta)+G_1(t,\theta)X_t+G_2(t,\theta)X_t^2\\}
+and
+\deqn{\sigma(X,t)=\sqrt{Q_0(t,\theta)+Q_1(t,\theta)X_t+Q_2(t,\theta)X_t^2.}\\}
+
+ }
 }
 \usage{
 GQD.mcmc(X, time, mesh=10, theta, sds, updates, burns=min(round(updates/2),25000),
          Dtype='Saddle', Trunc=c(4,4), RK.order=4, P=200, alpha=0,
          lower=min(na.omit(X))/2, upper=max(na.omit(X))*2,
-         exclude=NULL, plot.chain=TRUE, Tag=NA, wrt=FALSE)
+         exclude=NULL, plot.chain=TRUE, Tag=NA, wrt=FALSE, print.output=TRUE)
 }
 
 \arguments{
@@ -49,6 +72,7 @@ The number of updates to burn. That is, the first \code{burns} values are omitte
 \item{lower,upper}{Lower and upper bounds for the normalization range.}
 \item{Tag}{\code{Tag} can be used to name (tag) an MCMC run e.g. \code{Tag='Run_1'}}
 \item{wrt}{If \code{TRUE} a .cpp file will be written to the current directory. For bug report diagnostics.}
+\item{print.output}{If \code{TRUE} information about the model and algorithm is printed to the console. }
 }
 \details{
 
@@ -65,7 +89,7 @@ The number of updates to burn. That is, the first \code{burns} values are omitte
   \item{model.info$pd}{Effective number of parameters (see \code{model.info$DIC}).}
 }
 \references{
-Updates available on GitHub at \url{https://github.com/eta21}. Visit \url{http://etiennead.wix.com/diffusionr} for more details on the DiffusionRgqd package.
+Updates available on GitHub at \url{https://github.com/eta21}. 
 
 Daniels, H.E. 1954 Saddlepoint approximations in statistics. \emph{Ann. Math. Stat.}, \bold{25}:631--650.
 
@@ -93,7 +117,7 @@ Etienne A.D. Pienaar: \email{etiennead@gmail.com}
 }
 
 \section{Syntactical jargon}{
-\bold{Synt. [1]:} The coefficients of the 2D GQD may be parameterized using the reserved variable \code{theta}. For example:
+\bold{Synt. [1]:} The coefficients of the GQD may be parameterized using the reserved variable \code{theta}. For example:
 
 \code{G0 <- function(t){theta[1]*(theta[2]+sin(2*pi*(t-theta[3])))}}.
 
@@ -162,8 +186,8 @@ GQD.estimates(m1,thin=200)
 
 }
 }
-\keyword{Syntax}
+\keyword{syntax}
 \keyword{C++}
-\keyword{MCMC}
+\keyword{mcmc}
 
 

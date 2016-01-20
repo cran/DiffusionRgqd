@@ -5,12 +5,44 @@
 MCMC Inference on Bivariate Generalized Quadratic Diffusions (2D GQDs). 
 }
 \description{
-\code{BiGQD.mcmc()} uses parametrised coefficients (provided by the user as R-functions) to construct a C++ program in real time that allows the user to perform Bayesian inference on the resulting diffusion model. Given a set of starting parameters and other input parameters, a MCMC chain is returned for further analysis. The user may specify any model within the GQD framework by defining parametrised functions giving the form of the coefficients of the model. See the package manual for a description of the process.
+\code{BiGQD.mcmc()} uses parametrised coefficients (provided by the user as R-functions) to construct a C++ program in real time that allows the user to perform Bayesian inference on the resulting diffusion model. Given a set of starting parameters and other input parameters, a MCMC chain is returned for further analysis.
+\if{html}{
+\code{BiGQD.density} generates approximate transitional densities for a class of bivariate diffusion processes with SDE:
+
+\figure{BivEqn1.png}
+
+where
+
+\figure{BivEqn2.png}
+
+and
+
+\figure{BivEqn3.png}
+
+
+
+}
+\if{latex}{
+\code{BiGQD.density()} approximates the transitional density of jump diffusions of the form:
+\deqn{d\mathbf{X}_t = \boldsymbol\mu(\mathbf{X}_t,t)dt +\boldsymbol\sigma(\mathbf{X}_t,t)d\mathbf{W}_t\\}
+where
+\deqn{\mu^{(1)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}a_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\mu^{(2)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}b_{ij}(t)X_t^iY_t^j,\\}
+and
+\deqn{\boldsymbol\sigma(X_t,Y_t,t)\boldsymbol\sigma^{\prime}(X_t,Y_t,t) = (\gamma^{(i,j)}(\mathbf{X}_t,t))_{i,j=1,2}\\}
+such that
+\deqn{\gamma^{(1,1)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}c_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\gamma^{(1,2)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}d_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\gamma^{(2,1)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}e_{ij}(t)X_t^iY_t^j,\\}
+\deqn{\gamma^{(2,2)}(\mathbf{X}_t,t)= \sum_{i+j\leq 2}f_{ij}(t)X_t^iY_t^j.\\}
+
+ }
+
 }
 \usage{
 BiGQD.mcmc(X, time, mesh=10, theta, sds, updates, burns=min(round(updates/2),25000),
            RK.order=4, exclude=NULL, plot.chain=TRUE, Tag=NA, Dtype='Saddlepoint',
-           recycle=FALSE, rtf=runif(2), wrt=FALSE)
+           recycle=FALSE, rtf=runif(2), wrt=FALSE, print.output=TRUE)
 }
 \arguments{
   \item{X}{A matrix containing rows of data points to be modelled. Although observations are allowed to be non-equidistant, observations in both dimensions are assumed to occur at the same time epochs (i.e. \code{time} gives the time signature for both dimensions).
@@ -34,6 +66,7 @@ BiGQD.mcmc(X, time, mesh=10, theta, sds, updates, burns=min(round(updates/2),250
 \item{recycle}{Whether or not to recycle the roots calculated for the saddlepoint approximation over succesive updates.}
 \item{rtf}{Starting vector for internal use.}
 \item{wrt}{If \code{TRUE} a .cpp file will be written to the current directory. For bug report diagnostics.}
+\item{print.output}{If \code{TRUE} information about the model and algorithm is printed to the console. }
 }
 \value{
   \item{par.matrix }{A matrix containing the MCMC chain on \code{theta}. }
@@ -46,7 +79,7 @@ BiGQD.mcmc(X, time, mesh=10, theta, sds, updates, burns=min(round(updates/2),250
   \item{model.info$pd}{Effective number of parameters (see \code{model.info$DIC}).}
 }
 \references{
-Updates available on GitHub at \url{https://github.com/eta21}. Visit \url{http://etiennead.wix.com/diffusionr} for more details on the DiffusionRgqd package.
+Updates available on GitHub at \url{https://github.com/eta21}. 
 
 Daniels, H.E. 1954 Saddlepoint approximations in statistics. \emph{Ann. Math. Stat.}, \bold{25}:631--650.
 
@@ -108,7 +141,7 @@ Here sqrt(t)*cos(3*pi*t) constitutes the product of two terms that cannot be wri
 \examples{
 \donttest{
 #===============================================================================
-# This example simulates a bivariat time homogeneous diffusion and shows how
+# This example simulates a bivariate time homogeneous diffusion and shows how
 # to conduct inference using BiGQD.mcmc(). We fit two competing models and then
 # use the output to select a winner.
 #-------------------------------------------------------------------------------
@@ -121,7 +154,7 @@ Here sqrt(t)*cos(3*pi*t) constitutes the product of two terms that cannot be wri
        axes=FALSE)
   lines(Yt~time,col='red')
   expr1=expression(dX[t]==2(Y[t]-X[t])*dt+0.3*sqrt(X[t]*Y[t])*dW[t])
-  expr2=expression(dX[t]==(5-Y[t])*dt+0.5*sqrt(Y[t])*dB[t])
+  expr2=expression(dY[t]==(5-Y[t])*dt+0.5*sqrt(Y[t])*dB[t])
   text(50,9,expr1)
   text(50,8.5,expr2)
   axis(1,seq(0,100,5))
@@ -187,6 +220,6 @@ Here sqrt(t)*cos(3*pi*t) constitutes the product of two terms that cannot be wri
 #===============================================================================
  }
  }
-\keyword{Syntax}
+\keyword{syntax}
 \keyword{C++}
 \keyword{MCMC}

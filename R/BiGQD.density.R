@@ -1,4 +1,4 @@
-BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint')
+BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint',print.output=TRUE,eval.density=TRUE)
 {
   check_for_model=function()
   {
@@ -64,31 +64,44 @@ BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint')
   b1 = '\n==============================================================================\n'
   b2 = '==============================================================================\n'
   warn=c(
-    'Input: Dtype has to be one of Saddlepoint or Edgeworth.\n'
-    ,'Input: Argument {delt} must be < 1.\n'
-    ,'Input: length(delt)!=1.\n'
-    ,'Input: length(Xt)=length(Yt) must be > 1.\n'
-    ,'Input: Arguments {Xs,Ys} must be of length 1.\n'
-    ,'Input: Arguments {Xt,Yt} must be of type vector!.\n'
-    ,'Input: Starting time {s} cannot be greater than {t}.\n'
-    ,'Input: length(Xt)!=length(Yt).\n'
-    ,'Input: Arguments {s,t} must be of length 1.\n'
+    'Input 1: Dtype has to be one of Saddlepoint or Edgeworth.\n'
+    ,'Input 2: Argument {delt} must be < 1.\n'
+    ,'Input 3: length(delt)!=1.\n'
+    ,'Input 4: length(Xt)=length(Yt) must be > 1.\n'
+    ,'Input 5: Arguments {Xs,Ys} must be of length 1.\n'
+    ,'Input 6: Arguments {Xt,Yt} must be of type vector!.\n'
+    ,'Input 7: Starting time {s} cannot be greater than {t}.\n'
+    ,'Input 8: length(Xt)!=length(Yt).\n'
+    ,'Input 9: Arguments {s,t} must be of length 1.\n'
   )
+
+   warntrue=rep(FALSE,40)
   
+  if(length(Xt)<2){warntrue[4] =TRUE}#{stop(paste0(b1,warn[4],b2))}
+  if(length(Xs)!=1){warntrue[5] =TRUE}#{stop(paste0(b1,warn[5],b2))}
+  if(length(Yt)<2){warntrue[4] =TRUE}#{stop(paste0(b1,warn[4],b2))}
+  if(length(Ys)!=1){warntrue[5] =TRUE}#{stop(paste0(b1,warn[5],b2))}
+  if(!is.vector(Xt)){warntrue[6] =TRUE}#{stop(paste0(b1,warn[6],b2))}
+  if(!is.vector(Yt)){warntrue[6] =TRUE}#{stop(paste0(b1,warn[6],b2))}
+  if(sum(Dindex)==0){warntrue[1] =TRUE}#{stop(paste0(b1,warn[1],b2))}
+  if(delt>=1){warntrue[2] =TRUE}#{stop(paste0(b1,warn[2],b2))}
+  if(length(delt)>1){warntrue[3] =TRUE}#{stop(paste0(b1,warn[3],b2))}
+  if(t<s){warntrue[7] =TRUE}#{stop(paste0(b1,warn[7],b2))}
+  if(length(Xt)!=length(Yt)){warntrue[8] =TRUE}#{stop(paste0(b1,warn[8],b2))}
+  if(length(t)!=1){warntrue[9] =TRUE}#{stop(paste0(b1,warn[9],b2))}
+  if(length(s)!=1){warntrue[9] =TRUE}#{stop(paste0(b1,warn[9],b2))}
   
-  if(length(Xt)<2){stop(paste0(b1,warn[4],b2))}
-  if(length(Xs)!=1){stop(paste0(b1,warn[5],b2))}
-  if(length(Yt)<2){stop(paste0(b1,warn[4],b2))}
-  if(length(Ys)!=1){stop(paste0(b1,warn[5],b2))}
-  if(!is.vector(Xt)){stop(paste0(b1,warn[6],b2))}
-  if(!is.vector(Yt)){stop(paste0(b1,warn[6],b2))}
-  if(sum(Dindex)==0){stop(paste0(b1,warn[1],b2))}
-  if(delt>=1){stop(paste0(b1,warn[2],b2))}
-  if(length(delt)>1){stop(paste0(b1,warn[3],b2))}
-  if(t<s){stop(paste0(b1,warn[7],b2))}
-  if(length(Xt)!=length(Yt)){stop(paste0(b1,warn[8],b2))}
-  if(length(t)!=1){stop(paste0(b1,warn[9],b2))}
-  if(length(s)!=1){stop(paste0(b1,warn[9],b2))}
+  # Print output:
+  if(any(warntrue))
+  {
+      prnt = b1
+      for(i in which(warntrue))
+      {
+         prnt = paste0(prnt,warn[i])
+      }
+      prnt = paste0(prnt,b2)
+      stop(prnt)
+  }
   
   nnn=length(Xt)
   X1=matrix(outer(Xt,rep(1,nnn)),1,nnn*nnn,byrow=T)
@@ -239,8 +252,10 @@ BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint')
          namess4[31:36][which(indnames[31:36]==T)])
   Info=data.frame(matrix(Info,length(Info),1))
   colnames(Info)=''
-  print(Info,row.names = FALSE,right=F)
-  
+  if(print.output)
+  {
+    print(Info,row.names = FALSE,right=F)
+  }
   N.mesh=(t-s)/delt+1
   pb <- txtProgressBar(1,2*N.mesh,1,style = 1,width = 65)
   #print(body(f))
@@ -337,6 +352,9 @@ BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint')
   
   MM=solve.ode(Xs,Ys,t,s,delt)
   
+
+ if(eval.density)
+ {
   if(Dtype=='Saddlepoint')
   {
     n1=dim(MM)[1]
@@ -347,6 +365,8 @@ BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint')
     nr.updates=rep(0,n2-1)
     a=rep(0,nnn*nnn)
     b=rep(0,nnn*nnn)
+    
+    
     for(lll in 2:n2)
     {
       setTxtProgressBar(pb,lll+N.mesh," "," ")
@@ -414,11 +434,11 @@ BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint')
         DK2=gg1*hh2-gg2*hh1
         return(exp(K-a*xmat1-b*xmat2)/(2*pi)/sqrt(abs(DK2)))
       }
-      
-      
+             dett = (k02*k20-k11^2)
+      a    = (k20*(k10-X1)-k11*(k01-X2))/dett
+      b    = (-k11*(k10-X1)+k02*(k01-X2))/dett
       cc=ffab(X1,X2,a,b)
-      a=cc[[1]]*0
-      b=cc[[2]]*0
+
       nr.updates[lll-1]=cc$k
       DDD[,,lll]=t(matrix(fff(cc$a,cc$b,X1,X2),nnn,nnn,byrow=T))
       tme=proc.time()-tme
@@ -533,7 +553,12 @@ BiGQD.density=function(Xs,Ys,Xt,Yt,s,t,delt=1/100,Dtype='Saddlepoint')
     K4=MM[8,]
     DD2[i,]=1/sqrt(2*pi*abs(K2))*exp(K-th*K1)
   }
-  
+  }
+
+     if(!eval.density)
+   {
+     DDD=NULL;DD1=NULL;DD2=NULL;setTxtProgressBar(pb,2*N.mesh," "," ");
+   }
   
   
   rownames(MM) =c("k10","k20","k30","k40","k01","k02","k03","k04","k11","k12","k21","k22","k13","k31")

@@ -25,12 +25,9 @@ where \code{dW_t} and \code{dB_t} are standard Brownian motions, \code{t} is tim
     \item{\code{time}}{Time vector.}
   }
 }
-\details{
-For a full analysis of this dataset check out Example 7.5 in the example scripts at \url{https://github.com/eta21/DiffusionRgqd-Downloads}. 
-}
+
 
 \examples{
-data(SDEsim4)
 data(SDEsim4)
 attach(SDEsim4)
 # Have a look at the time series:

@@ -12,8 +12,8 @@ A package for Performing Inference and Analysis on Generalized Quadratic Diffusi
 \tabular{ll}{
 Package: \tab DiffusionRgqd\cr
 Type: \tab Package\cr
-Version: \tab 0.1.1\cr
-Date: \tab 2015-10-07\cr
+Version: \tab 0.1.2\cr
+Date: \tab 2015-12-01\cr
 License: \tab GPL (>= 2)\cr
 }
 The package is designed around an interface whereby the user supplies standard R-functions dictating the functional form of the coefficients of the GQD.  
@@ -40,7 +40,7 @@ Etienne A.D. Pienaar: \email{etiennead@gmail.com}
 Maintainer: Etienne A.D. Pienaar (\email{etiennead@gmail.com})
 }
 \references{
-Updates available on GitHub at \url{https://github.com/eta21}. Visit \url{http://etiennead.wix.com/diffusionr} for more details on the DiffusionRgqd package.
+Updates available on GitHub at \url{https://github.com/eta21}. 
 }
 \keyword{ package }
 \keyword{ C++}
